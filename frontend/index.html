@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WeedVision AI – Weed Classification</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8z"/></svg>
+      <div>
+        <h1>WeedVision AI</h1>
+        <p>DeepWeeds · ResNet50 weed classifier</p>
+      </div>
+    </div>
+    <div class="status" id="status" title="Backend status"><span class="dot"></span><span id="statusText">Checking…</span></div>
+  </header>
+
+  <main class="layout">
+    <section class="card input-card">
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tabUpload" role="tab" aria-selected="true">Upload Image</button>
+        <button class="tab" id="tabCamera" role="tab" aria-selected="false">Live Camera</button>
+      </div>
+
+      <!-- Upload -->
+      <div id="paneUpload" class="pane">
+        <div id="dropzone" class="dropzone" tabindex="0">
+          <svg viewBox="0 0 24 24" width="44" height="44"><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+          <p class="dz-title">Drag &amp; drop a weed photo here</p>
+          <p class="dz-sub">or click to browse · JPG, JPEG, PNG · up to 10 MB</p>
+          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,image/jpeg,image/png" hidden />
+        </div>
+      </div>
+
+      <!-- Camera -->
+      <div id="paneCamera" class="pane" hidden>
+        <div class="camera-box">
+          <video id="video" autoplay playsinline muted></video>
+          <div id="cameraPlaceholder" class="camera-placeholder">
+            <p>Camera is off</p>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn secondary" id="startCamera">Start Camera</button>
+          <button class="btn secondary" id="switchCamera" disabled>Switch Camera</button>
+          <button class="btn secondary" id="stopCamera" disabled>Stop</button>
+        </div>
+        <button class="btn primary wide" id="captureBtn" disabled>Capture Image</button>
+        <p id="cameraError" class="inline-error" hidden></p>
+      </div>
+
+      <!-- Preview -->
+      <div id="previewBox" class="preview-box" hidden>
+        <img id="previewImg" alt="Selected image preview" />
+        <button class="icon-btn" id="clearBtn" title="Remove image" aria-label="Remove image">✕</button>
+      </div>
+
+      <button class="btn primary wide" id="predictBtn" disabled>Classify Weed</button>
+    </section>
+
+    <section class="card result-card" id="resultCard">
+      <div id="emptyState" class="empty">
+        <svg viewBox="0 0 24 24" width="56" height="56"><path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 15l-4-4 1.4-1.4L11 14.2l5.6-5.6L18 10l-7 7z" opacity=".35"/></svg>
+        <h2>No prediction yet</h2>
+        <p>Upload or capture a photo, then press <strong>Classify Weed</strong>.</p>
+      </div>
+
+      <div id="results" hidden>
+        <img id="resultImg" class="result-img" alt="Analysed image" />
+        <div class="top-pred">
+          <span class="badge">Top prediction</span>
+          <h2 id="topClass">—</h2>
+          <div class="conf-row"><span>Confidence</span><strong id="topConf">0%</strong></div>
+          <div class="bar big"><div class="fill" id="topBar"></div></div>
+        </div>
+        <h3>All classes</h3>
+        <ul id="allClasses" class="class-list"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>Runs fully locally · TensorFlow/Keras ResNet50 · FastAPI</footer>
+
+  <div id="loader" class="loader" hidden><div class="spinner"></div><p>Analysing image…</p></div>
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
